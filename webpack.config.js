@@ -1,7 +1,7 @@
 module.exports = {
 
   // This is the entry point or start of our react applicaton
-  entry: "./app/app-no-routes.js",
+  entry: "./app/app.jsx",
 
   // The plain compiled Javascript will be output into this file
   output: {

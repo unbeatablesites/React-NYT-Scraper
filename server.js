@@ -1,78 +1,65 @@
-// Include Server Dependencies
-const express     = require('express'), 
-      bodyParser  = require('body-parser'), 
-      logger      = require('morgan'),
-      mongoose    = require('mongoose'),
-      axios       = require('axios'), 
-      PORT        = process.env.PORT || 3000, 
-      app         = express(),
-      Article     = require('./models/Article'),
-      Promise     = require('bluebird');
+// @author: Thomas Thompson
+// @github: tomtom28
+// @comment: HW for Week 19 - NY Time Article Search with ReactJS! Whoo!
 
-mongoose.Promise  = Promise;
 
-// Run Morgan for http request logging
-app.use(logger("dev"));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.text());
-app.use(bodyParser.json({ type: "application/vnd.api+json" }));
+// Require Node Modules
+var express = require('express');
+var bodyParser = require('body-parser');
+var mongoose = require('mongoose');
+var logger = require('morgan'); // for debugging
 
-app.use(express.static("./public"));
 
-// -------------------------------------------------
 
-// MongoDB configuration (Change this URL to your own DB)
-mongoose.connect("mongodb://heroku_zxpp617k:tsh16figu9pkbvr4e280bmk13t@ds133378.mlab.com:33378/heroku_zxpp617k");
+// Initialize Express for debugging & body parsing
+var app = express();
+app.use(logger('dev'));
+app.use(bodyParser.urlencoded({
+  extended: false
+}));
+
+
+// Serve Static Content
+app.use(express.static(process.cwd() + '/public'));
+
+
+
+// Database Configuration with Mongoose
+// ---------------------------------------------------------------------------------------------------------------
+// Connect to localhost if not a production environment
+if(process.env.NODE_ENV == 'production'){
+  // Gotten using `heroku config | grep MONGODB_URI` command in Command Line
+  mongoose.connect('mongodb://heroku_kbdv0v69:860jh71jd1iu5m5639gjr0gg9l@ds129028.mlab.com:29028/heroku_kbdv0v69');
+}
+else{
+  mongoose.connect('mongodb://localhost/nytreact');
+}
 var db = mongoose.connection;
 
-// mongolab-octagonal-86909 as MONGODB_URI
-//MONGODB_URI: mongodb://heroku_zxpp617k:tsh16figu9pkbvr4e280bmk13t@ds133378.mlab.com:33378/heroku_zxpp617k
-//mongo db production: mongodb://localhost/nyt_db
-
-
-db.on("error", function(err) {
-  console.log("Mongoose Error: ", err);
+// Show any Mongoose errors
+db.on('error', function(err) {
+  console.log('Mongoose Error: ', err);
 });
 
-db.once("open", function() {
-  console.log("Mongoose connection successful.");
+// Once logged in to the db through mongoose, log a success message
+db.once('open', function() {
+  console.log('Mongoose connection successful.');
 });
 
-// -------------------------------------------------
+// Import the Article model
+var Article = require('./models/Article.js');
+// ---------------------------------------------------------------------------------------------------------------
 
 
 
+// Import Routes/Controller
+var router = require('./controllers/controller.js');
+app.use('/', router);
 
-// Main "/" Route. This will redirect the user to our rendered React application
-app.get('/', function(req, res) {
-  res.render('/index.html');
-});
 
-// This is the route we will send GET requests to retrieve our most recent click data.
-// We will call this route the moment our page gets rendered
 
-//show all saved articles
-app.get('/api/saved', function(req, res) {
-  let article = new Article(req.query);
-  article.getArticles(req, res);
-});
-
-//save an article
-app.post('/api/saved', function(req, res) {
-  let article = new Article(req.query);
-  article.saveArticle(req, res);
-});
-
-//delete a saved article
-app.delete('/api/saved', function(req, res) {
-  let article = new Article(req.query);
-  article.deleteArticle(req, res);
-});
-
-// -------------------------------------------------
-
-// Starting our express server
-app.listen(PORT, function() {
-  console.log("server.js listening to your mom on PORT: " + PORT);
+// Launch App
+var port = process.env.PORT || 3000;
+app.listen(port, function(){
+  console.log('Running on port: ' + port);
 });
