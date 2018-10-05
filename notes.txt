@@ -1,0 +1,54 @@
+1.  create main and search pages in react.  get api call to nyt working and console.log object to show on page.
+2.  write results page to show articlesNyt props from main.  create onClick functions in main/helpers and pass to results to hit mongo POST route with main/helpers props callback function and save selected articles to mongo.
+3.  write history page to load saved articles with mongo GET routes via props callback from main/helpers.
+4.  write mongo DELETE route via props callback from main/helpers and implement on results and history page via onClick functions on buttons.
+5.  style
+
+main
+	functions:
+		get query
+		front end GET NYT
+		front end POST mongo
+		front end GET mongo
+		front end DELETE mongo
+	states:
+		articles from NYT GET
+		articles from mongo GET and DELETE
+
+search
+	props functions:
+		get query
+		front end NYT GET
+	props states:
+		none
+	states: query parameters for front end NYT GET
+	functions: reset form
+
+results
+	props functions:
+		front end mongo POST
+	props states:
+		articles from NYT GET
+	self states:
+		postArticle - used a parameter/argument
+
+history
+	props functions:
+		front end mongo GET
+		front end mongo DELETE
+	props states:
+		articles from mongo GET & DELETE
+
+
+
+3.  GET nyt api console logging and passing in prop function from search to the main page and the main page to results.
+4. POST selected results to mongo via the function in results.  toggle delete button.
+5.  DELETE write callback in main and send as prop to results and history.  update state of 
+
+// / - will load your single HTML page (with ReactJS) in public/index.html
+
+// /api/saved (get) - your components will use this to query MongoDB for all saved articles
+
+// /api/saved (post) - your components will use this to save an article to the database
+
+// /api/saved (delete) - your components will use this to delete a saved article in the database
