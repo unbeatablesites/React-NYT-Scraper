@@ -1,63 +1,34 @@
-// @author: Thomas Thompson
-// @github: tomtom28
-// @comment: HW for Week 19 - NY Time Article Search with ReactJS! Whoo!
+const express = require("express");
+const path = require("path");
+const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
+const PORT = process.env.PORT || 3001;
+const app = express();
+const apiRoutes = require("./routes/apiRoutes");
 
-
-// Require Node Modules
-var express = require('express');
-var bodyParser = require('body-parser');
-var mongoose = require('mongoose');
-var logger = require('morgan'); // for debugging
-
-
-
-// Initialize Express for debugging & body parsing
-var app = express();
-app.use(logger('dev'));
-app.use(bodyParser.urlencoded({
-  extended: false
-}));
-
-
-// Serve Static Content
-app.use(express.static(process.cwd() + '/public'));
-
-
-
-// Database Configuration with Mongoose
-// ---------------------------------------------------------------------------------------------------------------
-if(process.env.NODE_ENV == 'production'){
-  mongoose.connect('mongodb://fuzoka1:fuzoka1@ds123603.mlab.com:23603/heroku_sdl4dhwl');
+// Define middleware here
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+// Serve up static assets (usually on heroku)
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static("client/build"));
 }
-else{
-  mongoose.connect('mongodb://localhost/nytreact');
-}
-var db = mongoose.connection;
 
-// Show any Mongoose errors
-db.on('error', function(err) {
-  console.log('Mongoose Error: ', err);
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/nytreact";
+
+// Set mongoose to leverage built in JavaScript ES6 Promises
+// Connect to the Mongo DB
+mongoose.Promise = Promise;
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
+
+// Define API routes here
+app.use("/api", apiRoutes);
+// Send every other request to the React app
+// Define any API routes before this runs
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "./client/build/index.html"));
 });
 
-// Once logged in to the db through mongoose, log a success message
-db.once('open', function() {
-  console.log('Mongoose connection successful.');
-});
-
-// Import the Article model
-var Article = require('./models/Article.js');
-// ---------------------------------------------------------------------------------------------------------------
-
-
-
-// Import Routes/Controller
-var router = require('./controllers/controller.js');
-app.use('/', router);
-
-
-
-// Launch App
-var port = process.env.PORT || 3000;
-app.listen(port, function(){
-  console.log('Running on port: ' + port);
+app.listen(PORT, () => {
+  console.log(`🌎 ==> Server now on port ${PORT}!`);
 });
