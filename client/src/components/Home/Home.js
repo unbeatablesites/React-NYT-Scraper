@@ -76,8 +76,8 @@ class App extends Component {
       <div>
         <Nav />
         <Jumbotron>
-          <h1 className="display-3">NYT Article Scrubber</h1>
-          <p className="lead">Search for and annotate articles of interest</p>
+          <h1 className="display-3">New York Times Articles Finder</h1>
+          <p className="lead">Save Articles you like</p>
           <hr className="my-2" />
         </Jumbotron>
         <Container>
