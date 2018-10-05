@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "A Node, Express, MongoDB, and ReactJS application where users can query, display, and save articles from the New York Times Article Search API.",
   "main": "server.js",
+  "engines": {
+    "npm": "6.4.1"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
@@ -11,14 +14,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tomtom28/nyt-react.git"
+    "url": "git+https://github.com/unbeatablesites/React-NYT-Scraper.git"
   },
-  "author": "tomtom28",
+  "author": "Frank",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/tomtom28/nyt-react/issues"
+    "url": "https://github.com/unbeatablesites/React-NYT-Scraper/issues"
   },
-  "homepage": "https://github.com/tomtom28/nyt-react#readme",
+  "homepage": "https://github.com/unbeatablesites/React-NYT-Scraper#readme",
   "dependencies": {
     "axios": "^0.15.3",
     "body-parser": "^1.15.2",
